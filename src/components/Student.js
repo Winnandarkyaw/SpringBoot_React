@@ -13,6 +13,14 @@ export default function Student() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [students, setStudents] = useState([]);
+  //refresh
+  const refreshStudents = () => {
+    fetch("http://localhost:8080/student/getAll")
+      .then((res) => res.json())
+      .then((result) => {
+        setStudents(result);
+      });
+  };
   const handleClick = (e) => {
     e.preventDefault();
     const student = { name, address };
@@ -23,16 +31,21 @@ export default function Student() {
       body: JSON.stringify(student),
     }).then(() => {
       console.log("New Student added");
+      refreshStudents();
+      setName('');
+      setAddress('');
     });
   };
+  //   useEffect(() => {
+  //     fetch("http://localhost:8080/student/getAll")
+  //       .then((res) => res.json())
+  //       .then((result) => {
+  //         setStudents(result);
+  //       });
+  //   }, []);
   useEffect(() => {
-    fetch("http://localhost:8080/student/getAll")
-      .then((res) => res.json())
-      .then((result) => {
-        setStudents(result);
-      });
+    refreshStudents();
   }, []);
-
   return (
     <Container>
       <Paper elevation={3} style={paperStyle}>
